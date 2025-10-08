@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:simpleType name="ThemaType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Cityscape"/>
+            <xs:enumeration value="Nature"/>
+            <xs:enumeration value="People"/>
+            <xs:enumeration value="Religion"/>
+            <xs:enumeration value="Sport"/>
+            <xs:enumeration value="Architecture"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="CardTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Greeting"/>
+            <xs:enumeration value="Advertising"/>
+            <xs:enumeration value="Regular"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ValuableType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Historical"/>
+            <xs:enumeration value="Collectible"/>
+            <xs:enumeration value="Thematic"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="OldCardType">
+        <xs:sequence>
+            <xs:element name="Thema" type="ThemaType"/>
+            <xs:element name="Type" type="CardTypeType"/>
+            <xs:element name="Country" type="xs:string"/>
+            <xs:element name="Year" type="xs:gYear"/>
+            <xs:element name="Author" type="xs:string" minOccurs="0"/> <xs:element name="Valuable" type="ValuableType"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/> <xs:attribute name="sent" type="xs:boolean" use="required"/> </xs:complexType>
+
+    <xs:element name="OldCards">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="OldCard" type="OldCardType" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

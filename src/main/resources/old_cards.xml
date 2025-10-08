@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OldCards xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="old_cards.xsd">
+
+    <OldCard id="card001" sent="true">
+        <Thema>Cityscape</Thema>
+        <Type>Regular</Type>
+        <Country>Ukraine</Country>
+        <Year>1985</Year>
+        <Author>N. Kovalenko</Author>
+        <Valuable>Thematic</Valuable>
+    </OldCard>
+
+    <OldCard id="card002" sent="false">
+        <Thema>Nature</Thema>
+        <Type>Greeting</Type>
+        <Country>Poland</Country>
+        <Year>1992</Year>
+        <Valuable>Collectible</Valuable>
+    </OldCard>
+
+    <OldCard id="card003" sent="true">
+        <Thema>Architecture</Thema>
+        <Type>Advertising</Type>
+        <Country>Germany</Country>
+        <Year>2001</Year>
+        <Author>H. Schmidt</Author>
+        <Valuable>Historical</Valuable>
+    </OldCard>
+
+    <OldCard id="card004" sent="false">
+        <Thema>People</Thema>
+        <Type>Regular</Type>
+        <Country>Ukraine</Country>
+        <Year>1976</Year>
+        <Valuable>Collectible</Valuable>
+    </OldCard>
+</OldCards>

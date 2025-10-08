@@ -1,0 +1,26 @@
+# Compiled class files and packages
+target/
+*.jar
+*.war
+*.ear
+
+# Log files
+*.log
+
+# IDE settings files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+#Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+#xml output
+grouped_by_country.xml
+
+# Mac OS specific files
+.DS_Store
