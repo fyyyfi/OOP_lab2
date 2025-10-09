@@ -9,7 +9,7 @@ public class OldCard {
     private String type;        
     private String country;
     private int year;
-    private String author;      // Може бути null
+    private String author;      // Може бути порожнім
     private String valuable;    
 
     

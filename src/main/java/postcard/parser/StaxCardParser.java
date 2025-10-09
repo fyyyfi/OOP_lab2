@@ -1,62 +1,63 @@
 package postcard.parser;
 
 import postcard.model.OldCard;
-
-import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.events.Attribute;
-import javax.xml.stream.events.StartElement;
-import javax.xml.stream.events.XMLEvent;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamReader;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
 
 public class StaxCardParser {
 
     public List<OldCard> parse(String xmlFilePath) throws Exception {
         List<OldCard> cardList = new ArrayList<>();
         OldCard currentCard = null;
-
+        String currentTagContent = null;
+        
         XMLInputFactory factory = XMLInputFactory.newInstance();
-        XMLEventReader eventReader = factory.createXMLEventReader(new FileInputStream(xmlFilePath));
 
-        while (eventReader.hasNext()) {
-            XMLEvent event = eventReader.nextEvent();
+        XMLStreamReader reader = factory.createXMLStreamReader(new FileInputStream(xmlFilePath));
 
-            if (event.isStartElement()) {
-                StartElement startElement = event.asStartElement();
-                String elementName = startElement.getName().getLocalPart();
 
-                if (elementName.equalsIgnoreCase("OldCard")) {
-                    currentCard = new OldCard();
-                    Iterator<Attribute> attributes = startElement.getAttributes();
-                    while (attributes.hasNext()) {
-                        Attribute attr = attributes.next();
-                        if (attr.getName().toString().equalsIgnoreCase("id")) {
-                            currentCard.setId(attr.getValue());
-                        } else if (attr.getName().toString().equalsIgnoreCase("sent")) {
-                            currentCard.setSent(Boolean.parseBoolean(attr.getValue()));
+        while (reader.hasNext()) {
+            int eventType = reader.next();
+
+            switch (eventType) {
+                case XMLStreamConstants.START_ELEMENT:
+                    String tagName = reader.getLocalName();
+                    if ("OldCard".equalsIgnoreCase(tagName)) {
+                        currentCard = new OldCard();
+                        currentCard.setId(reader.getAttributeValue(null, "id"));
+                        currentCard.setSent(Boolean.parseBoolean(reader.getAttributeValue(null, "sent")));
+                    }
+                    break;
+                
+                case XMLStreamConstants.CHARACTERS:
+                    currentTagContent = reader.getText().trim();
+                    break;
+
+                case XMLStreamConstants.END_ELEMENT:
+                    tagName = reader.getLocalName();
+                    if (currentCard != null) {
+                        if ("OldCard".equalsIgnoreCase(tagName)) {
+                            cardList.add(currentCard);
+                        } else if ("Thema".equalsIgnoreCase(tagName)) {
+                            currentCard.setThema(currentTagContent);
+                        } else if ("Type".equalsIgnoreCase(tagName)) {
+                            currentCard.setType(currentTagContent);
+                        } else if ("Country".equalsIgnoreCase(tagName)) {
+                            currentCard.setCountry(currentTagContent);
+                        } else if ("Year".equalsIgnoreCase(tagName)) {
+                            currentCard.setYear(Integer.parseInt(currentTagContent));
+                        } else if ("Author".equalsIgnoreCase(tagName)) {
+                            currentCard.setAuthor(currentTagContent);
+                        } else if ("Valuable".equalsIgnoreCase(tagName)) {
+                            currentCard.setValuable(currentTagContent);
                         }
                     }
-                } else if (currentCard != null) {
-                    String value = eventReader.nextEvent().asCharacters().getData();
-                    switch (elementName.toLowerCase()) {
-                        case "thema": currentCard.setThema(value); break;
-                        case "type": currentCard.setType(value); break;
-                        case "country": currentCard.setCountry(value); break;
-                        case "year": currentCard.setYear(Integer.parseInt(value)); break;
-                        case "author": currentCard.setAuthor(value); break;
-                        case "valuable": currentCard.setValuable(value); break;
-                    }
-                }
-            }
-            
-            if (event.isEndElement()) {
-                String elementName = event.asEndElement().getName().getLocalPart();
-                if (elementName.equalsIgnoreCase("OldCard") && currentCard != null) {
-                    cardList.add(currentCard);
-                }
+                    break;
             }
         }
         return cardList;

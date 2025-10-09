@@ -1,10 +1,10 @@
 package postcard.parser;
 
-import postcard.model.OldCard;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import postcard.model.OldCard;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,33 +14,33 @@ import java.util.List;
 
 public class DomCardParser {
 
-
     public List<OldCard> parse(String xmlFilePath) throws Exception {
         List<OldCard> cardList = new ArrayList<>();
-        
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.parse(new File(xmlFilePath));
-        
-        document.getDocumentElement().normalize();
-        
-        NodeList nodeList = document.getElementsByTagName("OldCard");
-        
+
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.parse(new File(xmlFilePath));
+       
+        doc.getDocumentElement().normalize();
+
+        NodeList nodeList = doc.getElementsByTagName("OldCard");
+
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             
             if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element element = (Element) node;
-                
+                Element cardElement = (Element) node;
                 OldCard card = new OldCard();
-                card.setId(element.getAttribute("id"));
-                card.setSent(Boolean.parseBoolean(element.getAttribute("sent")));
-                card.setThema(getElementTextContent(element, "Thema"));
-                card.setType(getElementTextContent(element, "Type"));
-                card.setCountry(getElementTextContent(element, "Country"));
-                card.setYear(Integer.parseInt(getElementTextContent(element, "Year")));
-                card.setAuthor(getElementTextContent(element, "Author"));
-                card.setValuable(getElementTextContent(element, "Valuable"));
+
+
+                card.setId(cardElement.getAttribute("id"));
+                card.setSent(Boolean.parseBoolean(cardElement.getAttribute("sent")));
+                card.setThema(getTagValue("Thema", cardElement));
+                card.setType(getTagValue("Type", cardElement));
+                card.setCountry(getTagValue("Country", cardElement));
+                card.setYear(Integer.parseInt(getTagValue("Year", cardElement)));
+                card.setAuthor(getTagValue("Author", cardElement));
+                card.setValuable(getTagValue("Valuable", cardElement));
                 
                 cardList.add(card);
             }
@@ -48,12 +48,17 @@ public class DomCardParser {
         return cardList;
     }
 
-    private String getElementTextContent(Element parent, String tagName) {
-        NodeList nodeList = parent.getElementsByTagName(tagName);
-        if (nodeList.getLength() > 0) {
-            return nodeList.item(0).getTextContent();
-        } else {
-            return null; 
+
+    private String getTagValue(String tagName, Element element) {
+        NodeList nodeList = element.getElementsByTagName(tagName);
+
+        if (nodeList != null && nodeList.getLength() > 0) {
+            Node singleNode = nodeList.item(0);
+
+            if (singleNode != null && singleNode.getFirstChild() != null) {
+                return singleNode.getFirstChild().getNodeValue();
+            }
         }
+        return null;
     }
 }
