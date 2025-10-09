@@ -1,5 +1,8 @@
 package postcard.instr;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -8,7 +11,8 @@ import javax.xml.validation.Validator;
 import java.io.File;
 
 public class XmlValidator {
-
+     
+    private static final Logger logger = LogManager.getLogger(XmlValidator.class);
  
     public static boolean validate(String xmlPath, String xsdPath) {
         try {
@@ -21,10 +25,11 @@ public class XmlValidator {
 
             validator.validate(new StreamSource(new File(xmlPath)));
 
+ logger.debug("XML-файл {} успішно пройшов валідацію за схемою {}.", xmlPath, xsdPath);
             return true;
         } catch (Exception e) {
 
-            System.err.println("Помилка валідації: " + e.getMessage());
+            logger.error("Помилка валідації XML: {}", e.getMessage());
             return false;
         }
     }
