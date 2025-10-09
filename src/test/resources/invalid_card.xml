@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OldCards>
+    <OldCard id="invalid" sent="maybe"> <Thema>WrongValue</Thema> <Type>Regular</Type>
+        <Country>Test</Country>
+        <Year>2000</Year>
+        <Valuable>Thematic</Valuable>
+    </OldCard>
+</OldCards>
