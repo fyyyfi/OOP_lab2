@@ -25,7 +25,7 @@ public class Main {
     public static void main(String[] args) {
         logger.info("Запуск програми 'Старі листівки'");
 
-        logger.info("Крок 1: Валідація файлу {}",XML_FILE_PATH);
+        logger.info("Валідація файлу {}",XML_FILE_PATH);
         if (XmlValidator.validate(XML_FILE_PATH, XSD_FILE_PATH)) {
             logger.info("Результат: XML є валідним.");
         } else {
@@ -34,43 +34,44 @@ public class Main {
         }
 
 
-        logger.info("Крок 2: Парсинг та сортування");
+        System.out.println("Парсинг та сортування");
 
 
         try {
-            logger.info(" Використання DOM парсера");
+            System.out.println("\n1. Використання DOM парсера");
             List<OldCard> cards = new DomCardParser().parse(XML_FILE_PATH);
-            logger.info("Знайдено {} листівок", cards.size());
-             cards.sort(CardComparators.byYear());
-            logger.info("Листівки, відсортовані за роком:");
-            cards.forEach(card -> logger.info(card.toString()));
+            System.out.println("Знайдено " + cards.size() + " листівки.");
+            cards.sort(CardComparators.byYear());
+            System.out.println("Листівки, відсортовані за роком:");
+
+            cards.forEach(System.out::println);
         } catch (Exception e) {
             logger.error("Помилка DOM-парсера", e);
         }
 
         try {
-            logger.info("Використання SAX парсера");
+            System.out.println("\n2. Використання SAX парсера:");
             List<OldCard> cards = new SaxCardParser().parse(XML_FILE_PATH);
-            logger.info("Знайдено {} листівок", cards.size());
+            System.out.println("Знайдено " + cards.size() + " листівки.");
             cards.sort(CardComparators.byCountry());
-            logger.info("Листівки, відсортовані за країною:");
-            cards.forEach(card -> logger.info(card.toString()));
+            System.out.println("Листівки, відсортовані за країною:");
+            cards.forEach(System.out::println);
         } catch (Exception e) {
             logger.error("Помилка SAX парсера", e);
         }
 
         try {
-            logger.info("Використання STAX парсера");
+            System.out.println("\n3. Використання StAX парсера:");
             List<OldCard> cards = new StaxCardParser().parse(XML_FILE_PATH);
-            logger.info("Знайдено {} листівок.", cards.size());
+            System.out.println("Знайдено " + cards.size() + " листівки.");
             cards.sort(CardComparators.byId());
-            logger.info("Листівки, відсортовані за ID:");
-            cards.forEach(card -> logger.info(card.toString()));
+            System.out.println("Листівки, відсортовані за ID:");
+            cards.forEach(System.out::println);
         } catch (Exception e) {
             logger.error("Помилка STAX парсера", e);
         }
 
-        logger.info("Крок 3: XSLT трансформація");
+        logger.info("XSLT трансформація");
         XsltTransformer.transform(XML_FILE_PATH, XSLT_FILE_PATH, OUTPUT_XML_FILE_PATH);
         logger.info("Трансформацію завершено. Результат у файлі: {}", OUTPUT_XML_FILE_PATH);
     }
